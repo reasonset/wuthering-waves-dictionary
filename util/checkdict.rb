@@ -8,11 +8,22 @@ ARGF.each do |line|
   elem = line.split("\t")
   e0 = elem[0].unicode_normalize(:nfkc)
   e1 = elem[1].unicode_normalize(:nfkc)
+
+  # Tabs
+  unless elem.size == 4
+    puts "#{elem} has incorrect split (#{elem.size} elements)"
+  end
+
+  # Normalization needed
   puts "#{elem[0]} -> #{e0}" if elem[0].delete("!?！？") != e0.delete("!?！？")
   puts "#{elem[1]} -> #{e1}" if elem[1].delete("!?！？") != e1.delete("!?！？")
+
+  # Out of range
   if elem[1] =~ /[\u{20000}-\u{2FFFF}]/
     puts "Range #{elem[1]}"
   end
+
+  # Extra space
   e1s = elem[1].strip
   puts "#{e1s} has extra space" if elem[1] != e1s
   e2s = elem[2].strip
